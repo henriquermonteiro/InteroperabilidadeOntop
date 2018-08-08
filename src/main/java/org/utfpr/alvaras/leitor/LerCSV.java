@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.utfpr.alvaras.control.Utils;
+import org.utfpr.alvaras.control.impl.BingGeocoding;
 import org.utfpr.alvaras.control.impl.ClassifyChainLink;
 import org.utfpr.alvaras.control.impl.DictionaryBuilderLink;
 import org.utfpr.alvaras.control.impl.GISExporter;
@@ -48,7 +49,15 @@ public class LerCSV {
             BufferedReader readerKey = new BufferedReader(new InputStreamReader(fKey));
 
             String API_KEY = readerKey.readLine();
-
+            
+            readerKey.close();
+            
+            f_key = new File("bingMapsApiKey.key");
+            fKey = new FileInputStream(f_key);
+            readerKey = new BufferedReader(new InputStreamReader(fKey));
+            
+            String API_KEY_BING = readerKey.readLine();
+            
             readerKey.close();
 
             f_key = new File("postgis.conf");
@@ -61,7 +70,8 @@ public class LerCSV {
 
             ClassifyChainLink classify = new ClassifyChainLink();
             GISExporter gisExp = new GISExporter(URL);
-            GeocodingChainLink geo = new GeocodingChainLink(API_KEY);
+//            GeocodingChainLink geo = new GeocodingChainLink(API_KEY);
+            BingGeocoding geo = new BingGeocoding(API_KEY_BING);
 //            DictionaryBuilderLink dic = new DictionaryBuilderLink();
             TrimChainLink trimer = new TrimChainLink();
             ReplacerChainLink replacer = new ReplacerChainLink();
@@ -81,8 +91,10 @@ public class LerCSV {
 //            int k = 0;
             for (Alvara a : alvaras) {
 //                k++;
-                if (!list.contains(Integer.parseInt(a.getNumeroDoAlvara()))) {
-                    toUpp.process(a);
+                if (a.getNumeroDoAlvara().matches("\\d+")) {
+                    if (!list.contains(Integer.parseInt(a.getNumeroDoAlvara()))) {
+                        toUpp.process(a);
+                    }
                 }
 
 //                System.out.println(a);

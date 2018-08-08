@@ -5,6 +5,9 @@
  */
 package org.utfpr.alvaras.model;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  *
  * @author henrique
@@ -122,4 +125,8 @@ public class Endereco {
     public String toSearchString() {
         return logradouro + " " + numero + ", " + bairro + ", Curitiba Paraná Brasil";
     }
+    public String toBingSearchString() throws UnsupportedEncodingException {
+        return "countryRegion=BR&locality=Curitiba&addressLine="+ URLEncoder.encode(logradouro + " " + numero + ", " + bairro, "UTF-8") +"&maxResults=5";
+    }
+    
 }

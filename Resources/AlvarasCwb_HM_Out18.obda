@@ -1,0 +1,25 @@
+[PrefixDeclaration]
+:		http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#
+owl:		http://www.w3.org/2002/07/owl#
+rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
+xsd:		http://www.w3.org/2001/XMLSchema#
+rdfs:		http://www.w3.org/2000/01/rdf-schema#
+alvarasCwb:	http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#
+
+[SourceDeclaration]
+sourceUri	PostGis-Alvaras
+connectionUrl	jdbc:postgresql://192.168.25.9:5432/alvaras
+username	user
+password	1234
+driverClass	org.postgresql.Driver
+
+[MappingDeclaration] @collection [[
+mappingId	MAPID-c2432016affa419fbf5d902e0c84c6ca
+target		alvarasCwb:licence-{numero_alvara} a alvarasCwb:Licence ; alvarasCwb:hasName {nome_empresarial} ; alvarasCwb:hasActivitiesStart {inicio_atividade} ; alvarasCwb:hasEmission {emissao} ; alvarasCwb:hasExpiration {expiracao} ; alvarasCwb:has1stActivity {atividade1} ; alvarasCwb:has2ndActivity {atividade2} ; alvarasCwb:has3rdActivity {atividade3} . 
+source		select numero_alvara, nome_empresarial, inicio_atividade, emissao, expiracao, atividade1, atividade2, atividade3 from alvara
+
+mappingId	MAPID-9d02ccbf15ec4bb2bc50f01bc3b06b24
+target		alvarasCwb:licence-{numero_alvara} alvarasCwb:hasA alvarasCwb:{categoria} . 
+source		select numero_alvara, initcap(lower(categoria)) as categoria from categoria_alvara
+]]
+

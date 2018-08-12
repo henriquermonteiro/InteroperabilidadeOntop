@@ -7,7 +7,6 @@ package org.utfpr.alvaras.control;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import org.utfpr.alvaras.model.Endereco;
 
 /**
  *
@@ -23,10 +22,6 @@ public class Utils {
         }
         
         return new GregorianCalendar();
-    }
-
-    public static Endereco getEnderecoFor(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

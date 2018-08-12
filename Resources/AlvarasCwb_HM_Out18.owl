@@ -1,0 +1,1464 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY alvarasCwb "http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#"
+     xml:base="http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:alvarasCwb="http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb">
+        <rdfs:label xml:lang="en">Ontology about Work Licences issued by the Curitiba City Hall with the addition of the
+time.owl ontology.  (Imported from the W3C site: https://www.w3.org/TR/owl-time/#examples).
+
+Source excel file provided by the PMC - Prefeitura Municipal de Curitiba (Curitiba City Hall).
+
+Project steps: 
+Feeding category standardization, such as: Restaurant, Cafe, Bar, etc...
+Instance classification thru OntoDB retrieved from PostGis DB to feed the ontology
+Query list creation to verify and validate the completeness and correctude of the ontology.</rdfs:label>
+        <rdfs:label xml:lang="pt">Ontologia: Alvarás de Alimentação emitidos em Curitiba.
+Ontologia importada: time.owl (obtida do site da W3C: https://www.w3.org/TR/owl-time/#examples).
+
+Procedencia: Arquivo original obtido junto à Prefeitura Municipal de Curitiba em formato Excel.
+
+Tratamento: 
+Padronização de categorias de locais de alimentação como { restaurante, lanchonete, pizzaria, bar, cantina, refeitório }.
+Classificação das instâncias para instanciação em base relacional (ex. PostGreSQL). 
+Criação de queries em OntoDB para fazer a alimentação das instancias da base nesta Ontologia.
+Experimentação da Ontologia: validação das instâncias, precisão e corretude das respostas às &apos;queries&apos; baseadas em aspectos temporais.</rdfs:label>
+        <owl:imports rdf:resource="http://data.ordnancesurvey.co.uk/ontology/spatialrelations/"/>
+        <owl:imports rdf:resource="http://www.w3.org/2006/time"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#educates -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;educates">
+        <rdfs:range rdf:resource="&alvarasCwb;People"/>
+        <rdfs:domain rdf:resource="&alvarasCwb;Service"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#hasA -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;hasA">
+        <rdfs:domain rdf:resource="&alvarasCwb;Service"/>
+        <rdfs:range rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#hasProductiveActivity -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;hasProductiveActivity">
+        <rdfs:range rdf:resource="&alvarasCwb;ProductiveActivity"/>
+        <rdfs:domain rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#hasTheLicence -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;hasTheLicence">
+        <rdfs:range rdf:resource="&alvarasCwb;Licence"/>
+        <rdfs:domain rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#hosts -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;hosts">
+        <rdfs:domain rdf:resource="&alvarasCwb;Service"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#isDoneThru -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;isDoneThru">
+        <rdfs:domain rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#isLocatedAt -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;isLocatedAt"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#isPlaced -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;isPlaced">
+        <rdfs:range rdf:resource="&alvarasCwb;PlaceCondition"/>
+        <rdfs:domain rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#isProducedBy -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;isProducedBy">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="&alvarasCwb;Product"/>
+        <rdfs:range rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#isSoldBy -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;isSoldBy">
+        <rdfs:domain rdf:resource="&alvarasCwb;Product"/>
+        <rdfs:range rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#produces -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;produces">
+        <rdfs:range rdf:resource="&alvarasCwb;Product"/>
+        <rdfs:domain rdf:resource="&alvarasCwb;ProductiveActivity"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#sells -->
+
+    <owl:ObjectProperty rdf:about="&alvarasCwb;sells">
+        <rdfs:range rdf:resource="&alvarasCwb;Product"/>
+        <rdfs:domain rdf:resource="&alvarasCwb;WorkCategory"/>
+        <owl:inverseOf rdf:resource="&alvarasCwb;isSoldBy"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#has1stActivity -->
+
+    <owl:DatatypeProperty rdf:about="&alvarasCwb;has1stActivity">
+        <rdfs:comment xml:lang="en">Data property of the Licence class. 
+It must contain the main activity defined (given) by the Curitiba City Hall employee to 
+identify the nature of the establishment&apos;s service for whom the licence is being issued.
+It is mandatory to have a first activity defined for the establishment.</rdfs:comment>
+        <rdfs:comment xml:lang="pt">Propriedade de dados para a classe Alvara. 
+Deve conter a atividade principal definida pelo funcionário (notário) da PMC para identificar a
+natureza de serviços do estabelecimento que está emitindo seu alvará.
+Atividade é obrigatória.
+</rdfs:comment>
+        <rdfs:domain rdf:resource="&alvarasCwb;Licence"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#has2ndActivity -->
+
+    <owl:DatatypeProperty rdf:about="&alvarasCwb;has2ndActivity">
+        <rdfs:comment xml:lang="en">Data property of the Licence class. 
+It must contain an alternative activity defined (given) by the Curitiba City Hall employee to 
+identify a secondary nature of the establishment&apos;s service for whom the licence is being issued.
+It is optionally given.</rdfs:comment>
+        <rdfs:comment xml:lang="pt">Propriedade de dados para a classe Alvara. 
+Deve conter a atividade secundária definida pelo funcionário (notário) da PMC para identificar uma
+segunda natureza para os serviços do estabelecimento que está emitindo seu alvará.
+Esta atividade é opcionalmente atribuida pela prefeitura.</rdfs:comment>
+        <rdfs:domain rdf:resource="&alvarasCwb;Licence"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#has3rdActivity -->
+
+    <owl:DatatypeProperty rdf:about="&alvarasCwb;has3rdActivity">
+        <rdfs:comment xml:lang="en">Data property of the Licence class. 
+It must contain an alternative activity defined (given) by the Curitiba City Hall employee to 
+identify a third nature for the establishment&apos;s service for whom the licence is being issued.
+It is optionally given.</rdfs:comment>
+        <rdfs:comment xml:lang="pt">Propriedade de dados para a classe Alvara. 
+Deve conter uma outra atividade alternativa definida pelo funcionário (notário) da PMC para identificar uma natureza do serviço prestado pelo estabelecimento que está emitindo seu alvará.
+Esta atividade é opcionalmente atribuida pela prefeitura.
+</rdfs:comment>
+        <rdfs:domain rdf:resource="&alvarasCwb;Licence"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#hasActivitiesStart -->
+
+    <owl:DatatypeProperty rdf:about="&alvarasCwb;hasActivitiesStart">
+        <rdfs:domain rdf:resource="&alvarasCwb;Licence"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#hasEmission -->
+
+    <owl:DatatypeProperty rdf:about="&alvarasCwb;hasEmission">
+        <rdfs:domain rdf:resource="&alvarasCwb;Licence"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#hasExpiration -->
+
+    <owl:DatatypeProperty rdf:about="&alvarasCwb;hasExpiration">
+        <rdfs:domain rdf:resource="&alvarasCwb;Licence"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#hasLocationAt -->
+
+    <owl:DatatypeProperty rdf:about="&alvarasCwb;hasLocationAt">
+        <rdfs:domain rdf:resource="&alvarasCwb;Licence"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#hasName -->
+
+    <owl:DatatypeProperty rdf:about="&alvarasCwb;hasName">
+        <rdfs:comment xml:lang="en">Data property for the Licence class.
+It must contain the name of the company as formally established within the licence issued by the Curitiba city hall. 
+It can be either the company name or its fantasy name (market).
+</rdfs:comment>
+        <rdfs:comment xml:lang="pt">Propriedade de dados para a classe Alvara. 
+Deve conter o nome da empresa como foi registrado no alvará de licença comercial emitido pela PMC.
+Pode ser a razão social ou excepcionalmente o nome fantasia do estabelecimento.
+</rdfs:comment>
+        <rdfs:domain rdf:resource="&alvarasCwb;Licence"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#hasNumber -->
+
+    <owl:DatatypeProperty rdf:about="&alvarasCwb;hasNumber">
+        <rdfs:comment xml:lang="en">Data property of the Licence class.
+It must contain the record number given to the licence issued by the city hall.
+Note. As this record number can have also characters, it was declared as a string type.</rdfs:comment>
+        <rdfs:comment xml:lang="pt">Propriedade de dados para a classe Alvara. 
+Deve conter o número de registro do alvará de licença comercial emitido pela PMC.
+Como este número pode ter uma edição com caracteres especiais, fica melhor defini-lo como string.</rdfs:comment>
+        <rdfs:domain rdf:resource="&alvarasCwb;Licence"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Adjunct -->
+
+    <owl:Class rdf:about="&alvarasCwb;Adjunct">
+        <rdfs:label xml:lang="pt">Complemento
+</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Bar -->
+
+    <owl:Class rdf:about="&alvarasCwb;Bar">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Bar"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Boate -->
+
+    <owl:Class rdf:about="&alvarasCwb;Boate">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Buffet -->
+
+    <owl:Class rdf:about="&alvarasCwb;Buffet">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Buffet"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Cafe -->
+
+    <owl:Class rdf:about="&alvarasCwb;Cafe">
+        <rdfs:label xml:lang="pt">Cafeteria ou Trattoria (italiano)</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Cafe"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Cafeteria -->
+
+    <owl:Class rdf:about="&alvarasCwb;Cafeteria">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Canteen -->
+
+    <owl:Class rdf:about="&alvarasCwb;Canteen">
+        <rdfs:label xml:lang="en">Indoor place to feed employees that belong to the company or institution being public or private business. Also, present in schools, colleges public or private to feed students.</rdfs:label>
+        <rdfs:label xml:lang="pt">Cantina de ambientes profissionais públicos ou privados. Local de refeições utilizável somente por funcionários de uma empresa pública ou privada. No caso de instituições de ensino, também utilizada por estudantes.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Canteen"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Cantina -->
+
+    <owl:Class rdf:about="&alvarasCwb;Cantina">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Churrascaria -->
+
+    <owl:Class rdf:about="&alvarasCwb;Churrascaria">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#City -->
+
+    <owl:Class rdf:about="&alvarasCwb;City">
+        <rdfs:label xml:lang="pt">Cidade</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Confeitaria -->
+
+    <owl:Class rdf:about="&alvarasCwb;Confeitaria">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Corn -->
+
+    <owl:Class rdf:about="&alvarasCwb;Corn">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Product"/>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&alvarasCwb;isSoldBy"/>
+                                <owl:someValuesFrom rdf:resource="&alvarasCwb;Farm"/>
+                            </owl:Restriction>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&alvarasCwb;isSoldBy"/>
+                                <owl:someValuesFrom rdf:resource="&alvarasCwb;FoodStore"/>
+                            </owl:Restriction>
+                        </owl:unionOf>
+                    </owl:Class>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isProducedBy"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Farm"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Product"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Country -->
+
+    <owl:Class rdf:about="&alvarasCwb;Country">
+        <rdfs:label xml:lang="pt">País</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#District -->
+
+    <owl:Class rdf:about="&alvarasCwb;District">
+        <rdfs:label xml:lang="pt">Bairro</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Drug -->
+
+    <owl:Class rdf:about="&alvarasCwb;Drug">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Product"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isProducedBy"/>
+                        <owl:someValuesFrom rdf:resource="&alvarasCwb;Industry"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isSoldBy"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;DrugStore"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Product"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#DrugStore -->
+
+    <owl:Class rdf:about="&alvarasCwb;DrugStore">
+        <rdfs:label xml:lang="pt">Farmácia ou Drogaria</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;DrugStore"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Trading"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Education -->
+
+    <owl:Class rdf:about="&alvarasCwb;Education">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Education"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;educates"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;People"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Service"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Farm -->
+
+    <owl:Class rdf:about="&alvarasCwb;Farm">
+        <rdfs:label xml:lang="pt">Fazenda, sítio ou chácara produtora de alimentos. Setor primário - agricultura.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Farm"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;RawMaterialExploration"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Farmacia -->
+
+    <owl:Class rdf:about="&alvarasCwb;Farmacia">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#FastFood -->
+
+    <owl:Class rdf:about="&alvarasCwb;FastFood">
+        <rdfs:label xml:lang="pt">Local que prepara refeições rápidas como lanches ou pratos prontos.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;FastFood"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Feeding -->
+
+    <owl:Class rdf:about="&alvarasCwb;Feeding">
+        <rdfs:label xml:lang="pt">Alimentacao</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Service"/>
+        <rdfs:comment xml:lang="en">Feeding is a type of service provided by all the establisment that has a licence in which its main activity or its alternative activity is defined as the categories given by the CNAE (SEBRAE-IBGE).
+They are in summary (12 categories):
+Restaurant, cafe, snack bar, bar, refectory, fast-food, food trucks, kiosk, pizzeria, street food, buffet and canteen.
+</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Food -->
+
+    <owl:Class rdf:about="&alvarasCwb;Food">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Product"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isProducedBy"/>
+                        <owl:someValuesFrom rdf:resource="&alvarasCwb;Industry"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isSoldBy"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;FoodStore"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Product"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#FoodIndustry -->
+
+    <owl:Class rdf:about="&alvarasCwb;FoodIndustry">
+        <rdfs:label xml:lang="pt">Indústria alimentícia, que recebe alimentos do setor primário e industrializa em novos alimentos processados. Pertence ao setor secundário da economia.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;FoodIndustry"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Industry"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#FoodStore -->
+
+    <owl:Class rdf:about="&alvarasCwb;FoodStore">
+        <rdfs:label xml:lang="pt">Loja, armazém ou mercado (de qualquer tamanho) que vende entre outros produtos, alimentos frescos ou industrializados. 
+Setor terciário da economia: serviços comerciais.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;FoodStore"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Trading"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#FoodTruck -->
+
+    <owl:Class rdf:about="&alvarasCwb;FoodTruck">
+        <rdfs:label xml:lang="pt">Local que prepara e vende refeições rápidas através de veículos adaptados, normalmente caminhões e similares em ambientes externos.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;FoodTruck"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isDoneThru"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Truck"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isPlaced"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Outdoors"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Frigorifico -->
+
+    <owl:Class rdf:about="&alvarasCwb;Frigorifico">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Hosting -->
+
+    <owl:Class rdf:about="&alvarasCwb;Hosting">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&alvarasCwb;hosts"/>
+                <owl:someValuesFrom rdf:resource="&alvarasCwb;People"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Service"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Indoors -->
+
+    <owl:Class rdf:about="&alvarasCwb;Indoors">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;PlaceCondition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Industry -->
+
+    <owl:Class rdf:about="&alvarasCwb;Industry">
+        <rdfs:label xml:lang="pt">Industrial</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Industry"/>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="&alvarasCwb;Food"/>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&alvarasCwb;produces"/>
+                                <owl:someValuesFrom rdf:resource="&alvarasCwb;Drug"/>
+                            </owl:Restriction>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;ProductiveActivity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Information -->
+
+    <owl:Class rdf:about="&alvarasCwb;Information">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Product"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isProducedBy"/>
+                        <owl:someValuesFrom rdf:resource="&alvarasCwb;ProvideInfo"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Product"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Kiosk -->
+
+    <owl:Class rdf:about="&alvarasCwb;Kiosk">
+        <rdfs:label xml:lang="pt">Quisque: é um local que vende alimentos específicos em locais fechados como shoppings ou centros comerciais, ou mesmo feiras.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isDoneThru"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Stand"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isPlaced"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Indoors"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Kiosk"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Lanchonete -->
+
+    <owl:Class rdf:about="&alvarasCwb;Lanchonete">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#LatitudeNS -->
+
+    <owl:Class rdf:about="&alvarasCwb;LatitudeNS">
+        <rdfs:label xml:lang="pt">Latitude Norte ou Sul</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Licence -->
+
+    <owl:Class rdf:about="&alvarasCwb;Licence">
+        <rdfs:label xml:lang="pt">Alvará</rdfs:label>
+        <rdfs:comment xml:lang="pt">O Alvará é uma licença concedida pela Prefeitura, permitindo a localização e o funcionamento de estabelecimentos comerciais, industriais, agrícolas, prestadores de serviços, bem como de sociedades, instituições, e associações de qualquer natureza, vinculadas a pessoas físicas ou jurídicas.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Location -->
+
+    <owl:Class rdf:about="&alvarasCwb;Location">
+        <rdfs:label xml:lang="pt">Localizacao</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&alvarasCwb;isLocatedAt"/>
+                <owl:onClass rdf:resource="&alvarasCwb;LatitudeNS"/>
+                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&alvarasCwb;isLocatedAt"/>
+                <owl:onClass rdf:resource="&alvarasCwb;LongitudeEW"/>
+                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
+            </owl:Restriction>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#LongitudeEW -->
+
+    <owl:Class rdf:about="&alvarasCwb;LongitudeEW">
+        <rdfs:label xml:lang="pt">Longitude Leste ou Oeste</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Magazine -->
+
+    <owl:Class rdf:about="&alvarasCwb;Magazine">
+        <rdfs:label xml:lang="pt">Revista.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Magazine"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;ProvideInfo"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Meal -->
+
+    <owl:Class rdf:about="&alvarasCwb;Meal">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Product"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isProducedBy"/>
+                        <owl:someValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Product"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Newspaper -->
+
+    <owl:Class rdf:about="&alvarasCwb;Newspaper">
+        <rdfs:label xml:lang="pt">Jornal escrito.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Newspaper"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;ProvideInfo"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Number -->
+
+    <owl:Class rdf:about="&alvarasCwb;Number">
+        <rdfs:label xml:lang="pt">Número</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Outdoors -->
+
+    <owl:Class rdf:about="&alvarasCwb;Outdoors">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;PlaceCondition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Padaria -->
+
+    <owl:Class rdf:about="&alvarasCwb;Padaria">
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#People -->
+
+    <owl:Class rdf:about="&alvarasCwb;People"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Pizzeria -->
+
+    <owl:Class rdf:about="&alvarasCwb;Pizzeria">
+        <rdfs:label xml:lang="pt">Pizzaria. Tipo específico de restaurante que serve principalmente ou exclusivamente pizzas.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Pizzeria"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#PlaceCondition -->
+
+    <owl:Class rdf:about="&alvarasCwb;PlaceCondition"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Product -->
+
+    <owl:Class rdf:about="&alvarasCwb;Product"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#ProductiveActivity -->
+
+    <owl:Class rdf:about="&alvarasCwb;ProductiveActivity">
+        <rdfs:label xml:lang="pt">AtividadeProdutiva</rdfs:label>
+        <rdfs:comment xml:lang="en">Productive Activity
+The economy of a country can be divided into sectors (primary, secondary and tertiary ) according to the produced products , production methods and resources used . These economic sectors can show the degree of economic development of a country or region.
+
+1st (primary):  It is the primary sector that provides the raw material for the processing industry.
+Examples: Agriculture, livestock,  extraction plant, hunting and fishing.
+
+2nd (secondary): It is the sector of the economy that transforms raw materials (produced by the primary sector) in industrialized products. Examples: Food, car, furniture industries, etc...
+
+3rd (tertiary): It is the economic sector related services. Services are not material goods that people or companies provide to third parties to meet certain needs. Examples: education, healthy, tecnology, feeding, transport, cleaning, etc..
+</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#ProvideInfo -->
+
+    <owl:Class rdf:about="&alvarasCwb;ProvideInfo">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&alvarasCwb;produces"/>
+                <owl:someValuesFrom rdf:resource="&alvarasCwb;Information"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Service"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#PublicPlace -->
+
+    <owl:Class rdf:about="&alvarasCwb;PublicPlace">
+        <rdfs:label xml:lang="pt">Logradouro</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#RawMaterialExploration -->
+
+    <owl:Class rdf:about="&alvarasCwb;RawMaterialExploration">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&alvarasCwb;produces"/>
+                <owl:someValuesFrom rdf:resource="&alvarasCwb;Corn"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;ProductiveActivity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Refectory -->
+
+    <owl:Class rdf:about="&alvarasCwb;Refectory">
+        <rdfs:label xml:lang="pt">Refeitório. É um local para servir refeições às pessoas que encontram-se hospedadas em um local de hospedagem como hotéis, pousadas ou albergues.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Refectory"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isDoneThru"/>
+                        <owl:someValuesFrom rdf:resource="&alvarasCwb;Hosting"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Restaurant -->
+
+    <owl:Class rdf:about="&alvarasCwb;Restaurant">
+        <rdfs:label xml:lang="pt">Restaurante. É o tipo de local tradicional que serve refeições especializadas. Pode estar localizado internamente em centros comerciais ou shoppings ou, externamente nas ruas de uma cidade.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Restaurant"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Service -->
+
+    <owl:Class rdf:about="&alvarasCwb;Service">
+        <rdfs:label xml:lang="pt">Servicos</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;ProductiveActivity"/>
+        <rdfs:comment xml:lang="en">Services belong to the third economy sector which represents every type of services provided without using any raw material.
+Examples: education, feeding, transport, culture.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#SnackBar -->
+
+    <owl:Class rdf:about="&alvarasCwb;SnackBar">
+        <rdfs:label xml:lang="pt">Lanchonete (pastelaria e similares). Local que serve lanches com uma configuração mais simples do que FastFoods. Não serve refeições como um restaurante mas tipos específicos de lanches como salgados e sanduíches. Pode estar localizado em espaços internos como centros comerciais mas é mais comum em ambientes externos. </rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;SnackBar"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Stand -->
+
+    <owl:Class rdf:about="&alvarasCwb;Stand"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#State -->
+
+    <owl:Class rdf:about="&alvarasCwb;State">
+        <rdfs:label xml:lang="pt">Estado</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#StreetFood -->
+
+    <owl:Class rdf:about="&alvarasCwb;StreetFood">
+        <rdfs:label xml:lang="pt">Barracas de comida. É um tipo ambulante de servir comida. Serve lanches ou refeições utilizando barracas ou bancas montadas em locais externos, em ruas e também em feiras de alimentação periódicas.</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;StreetFood"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;hasProductiveActivity"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Feeding"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isDoneThru"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Stand"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&alvarasCwb;isPlaced"/>
+                        <owl:allValuesFrom rdf:resource="&alvarasCwb;Outdoors"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;WorkCategory"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Trading -->
+
+    <owl:Class rdf:about="&alvarasCwb;Trading">
+        <rdfs:label xml:lang="pt">Comercial</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&alvarasCwb;Service"/>
+                    <owl:Class>
+                        <owl:intersectionOf rdf:parseType="Collection">
+                            <owl:Class>
+                                <owl:unionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="&alvarasCwb;Food"/>
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="&alvarasCwb;sells"/>
+                                        <owl:someValuesFrom rdf:resource="&alvarasCwb;Drug"/>
+                                    </owl:Restriction>
+                                </owl:unionOf>
+                            </owl:Class>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&alvarasCwb;sells"/>
+                                <owl:allValuesFrom rdf:resource="&alvarasCwb;Product"/>
+                            </owl:Restriction>
+                        </owl:intersectionOf>
+                    </owl:Class>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Service"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Truck -->
+
+    <owl:Class rdf:about="&alvarasCwb;Truck"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#WorkCategory -->
+
+    <owl:Class rdf:about="&alvarasCwb;WorkCategory"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#ZipCode -->
+
+    <owl:Class rdf:about="&alvarasCwb;ZipCode">
+        <rdfs:label xml:lang="pt">Cep</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&alvarasCwb;Location"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#AbrilSA -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;AbrilSA">
+        <rdf:type rdf:resource="&alvarasCwb;ProvideInfo"/>
+        <produces rdf:resource="&alvarasCwb;Veja"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#AzeiteCoccinero -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;AzeiteCoccinero">
+        <rdf:type rdf:resource="&alvarasCwb;Food"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Baggio -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;Baggio">
+        <rdf:type rdf:resource="&alvarasCwb;Pizzeria"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#BarBrahma -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;BarBrahma">
+        <rdf:type rdf:resource="&alvarasCwb;Bar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#BuffetDoBatel -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;BuffetDoBatel">
+        <rdf:type rdf:resource="&alvarasCwb;Buffet"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Bunge -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;Bunge">
+        <rdf:type rdf:resource="&alvarasCwb;FoodIndustry"/>
+        <produces rdf:resource="&alvarasCwb;AzeiteCoccinero"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#BurgerKing -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;BurgerKing">
+        <rdf:type rdf:resource="&alvarasCwb;FastFood"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#DrogaRaia -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;DrogaRaia">
+        <rdf:type rdf:resource="&alvarasCwb;DrugStore"/>
+        <rdf:type rdf:resource="&alvarasCwb;Trading"/>
+        <sells rdf:resource="&alvarasCwb;Tylenol"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#EmporioDoBrigadeiro -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;EmporioDoBrigadeiro">
+        <rdf:type rdf:resource="&alvarasCwb;Kiosk"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Festval -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;Festval">
+        <rdf:type rdf:resource="&alvarasCwb;FoodStore"/>
+        <rdf:type rdf:resource="&alvarasCwb;Trading"/>
+        <sells rdf:resource="&alvarasCwb;AzeiteCoccinero"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#GR_Alimentos -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;GR_Alimentos">
+        <rdf:type rdf:resource="&alvarasCwb;Canteen"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#GloboSA -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;GloboSA">
+        <rdf:type rdf:resource="&alvarasCwb;ProvideInfo"/>
+        <produces rdf:resource="&alvarasCwb;oGlobo"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Holiday_Inn -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;Holiday_Inn">
+        <rdf:type rdf:resource="&alvarasCwb;Hosting"/>
+        <hasA rdf:resource="&alvarasCwb;Inn_refectory"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#HotDogExpresso -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;HotDogExpresso">
+        <rdf:type rdf:resource="&alvarasCwb;StreetFood"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Inn_refectory -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;Inn_refectory">
+        <rdf:type rdf:resource="&alvarasCwb;Refectory"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Lellis -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;Lellis">
+        <rdf:type rdf:resource="&alvarasCwb;Cafe"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#MFRural -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;MFRural">
+        <rdf:type rdf:resource="&alvarasCwb;Farm"/>
+        <produces rdf:resource="&alvarasCwb;MilhoMT"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#MangiareFelice -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;MangiareFelice">
+        <rdf:type rdf:resource="&alvarasCwb;Restaurant"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#MilhoMT -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;MilhoMT">
+        <rdf:type rdf:resource="&alvarasCwb;Corn"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#OldNews -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;OldNews">
+        <rdf:type rdf:resource="&alvarasCwb;SnackBar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Totopos -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;Totopos">
+        <rdf:type rdf:resource="&alvarasCwb;FoodTruck"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Tylenol -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;Tylenol">
+        <rdf:type rdf:resource="&alvarasCwb;Drug"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#UTFPr -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;UTFPr">
+        <rdf:type rdf:resource="&alvarasCwb;Education"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#Veja -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;Veja">
+        <rdf:type rdf:resource="&alvarasCwb;Magazine"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#oGlobo -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;oGlobo">
+        <rdf:type rdf:resource="&alvarasCwb;Newspaper"/>
+        <produces rdf:resource="&alvarasCwb;oGlobo"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ricardo/ontologies/2016/5/alvarasCwb#testAlvara -->
+
+    <owl:NamedIndividual rdf:about="&alvarasCwb;testAlvara">
+        <rdf:type rdf:resource="&alvarasCwb;Licence"/>
+        <hasName rdf:datatype="&xsd;string">Teste Feio</hasName>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+

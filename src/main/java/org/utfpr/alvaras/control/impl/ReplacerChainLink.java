@@ -22,8 +22,4 @@ public class ReplacerChainLink extends ResponsibilityChain<Alvara>{
     public Alvara change(Alvara input) {
         return input.setAtividadePrincipal(replacer(input.getAtividadePrincipal())).setAtividadeSecundaria(replacer(input.getAtividadeSecundaria())).setAtividadeSecundaria2(replacer(input.getAtividadeSecundaria2()));
     }
-    
-    public static void main(String ... args){
-        System.out.println(replacer("SERVIÇOS MÚSICA AO VIVO"));
-    }
 }

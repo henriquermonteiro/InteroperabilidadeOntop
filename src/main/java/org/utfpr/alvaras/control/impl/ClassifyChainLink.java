@@ -5,6 +5,7 @@
  */
 package org.utfpr.alvaras.control.impl;
 
+import java.io.File;
 import org.utfpr.alvaras.control.ResponsibilityChain;
 import org.utfpr.alvaras.model.Alvara;
 
@@ -18,7 +19,7 @@ public class ClassifyChainLink extends ResponsibilityChain<Alvara> {
     private int count;
 
     public ClassifyChainLink() {
-        category = new Category();
+        category = new Category(new File(""));
         
         count = 0;
     }

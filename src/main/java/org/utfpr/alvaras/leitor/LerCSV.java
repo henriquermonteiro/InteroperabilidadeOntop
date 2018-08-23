@@ -69,7 +69,7 @@ public class LerCSV {
             readerKey.close();
 
             ClassifyChainLink classify = new ClassifyChainLink();
-            GISExporter gisExp = new GISExporter(URL);
+            GISExporter gisExp = new GISExporter(URL, "user", "1234");
 //            GeocodingChainLink geo = new GeocodingChainLink(API_KEY);
             BingGeocoding geo = new BingGeocoding(API_KEY_BING);
 //            DictionaryBuilderLink dic = new DictionaryBuilderLink();

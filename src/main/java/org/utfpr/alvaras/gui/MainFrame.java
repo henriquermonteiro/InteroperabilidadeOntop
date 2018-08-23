@@ -5,17 +5,61 @@
  */
 package org.utfpr.alvaras.gui;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.lib.easyconfig.EasyConfig;
+import org.utfpr.alvaras.control.Choreographer;
+import org.utfpr.alvaras.control.ResponsibilityChain;
+import org.utfpr.alvaras.leitor.LerCSV;
+import org.utfpr.alvaras.model.Alvara;
+
 /**
  *
  * @author henrique
  */
 public class MainFrame extends javax.swing.JFrame {
 
+    private Properties config;
+
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+
+        Properties model = new Properties();
+
+        model.put("host", "req-not_empty");
+        model.put("user", "req-not_empty");
+        model.put("password", "req-not_empty");
+        model.put("google_api_key", "req");
+        model.put("bing_api_key", "req");
+        model.put("mapping_file", "req");
+        model.put("base_file", "req");
+
+        boolean error_flag = false;
+
+        try {
+            config = EasyConfig.getConfigs("config.conf", model, true);
+
+            if (config != null) {
+                jTextField6.setText(config.getProperty("base_file"));
+            } else {
+                error_flag = true;
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            error_flag = true;
+        }
+
     }
 
     /**
@@ -37,6 +81,8 @@ public class MainFrame extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
+        jTextField6 = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,6 +103,11 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         jButton2.setText("Gerar Dicionário");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jButton2MouseReleased(evt);
+            }
+        });
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -64,6 +115,11 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         jButton3.setText("Executar");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jButton3MousePressed(evt);
+            }
+        });
 
         jTextField1.setText("<STATUS GOOGLE API>");
 
@@ -74,6 +130,15 @@ public class MainFrame extends javax.swing.JFrame {
         jTextField4.setText("<STATUS CATEGORY>");
 
         jTextField5.setText("<STATUS MAP THING>");
+
+        jTextField6.setText("jTextField6");
+
+        jButton4.setText("Search ...");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -97,9 +162,14 @@ public class MainFrame extends javax.swing.JFrame {
                                     .addComponent(jTextField3)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(43, 43, 43)
+                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -108,7 +178,10 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -141,10 +214,22 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jButton1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseReleased
         // TODO add your handling code here:
-        Config c = new Config(this, true);
-        
+        Config c = new Config(this, true, config);
+
         c.setVisible(true);
     }//GEN-LAST:event_jButton1MouseReleased
+
+    private void jButton2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseReleased
+        executeChoreography(Choreographer.getDictionaryChain());
+    }//GEN-LAST:event_jButton2MouseReleased
+
+    private void jButton3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MousePressed
+        executeChoreography(Choreographer.getExecutionChain(config.getProperty("google_api_key"), config.getProperty("bing_api_key"), config.getProperty("host"), config.getProperty("user"), config.getProperty("password")));
+    }//GEN-LAST:event_jButton3MousePressed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -181,10 +266,32 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
 
+    private void executeChoreography(ResponsibilityChain<Alvara> chain) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(new File(config.getProperty("base_file"))));
+            ArrayList<Alvara> alvaras = LerCSV.ler(reader);
+            
+            for(Alvara alvara : alvaras){
+                chain.change(alvara);
+            }
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
@@ -192,5 +299,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
 }

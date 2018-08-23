@@ -33,6 +33,10 @@ public class BingGeocoding extends ResponsibilityChain<Alvara>{
             return input;
         }
         
+        if(input.getEndereco().getLongitude() <= 180 && input.getEndereco().getLongitude() >= -180 && input.getEndereco().getLatitude() <= 90 && input.getEndereco().getLatitude() >= -90){
+            return input;
+        }
+        
         try{
             URL url = new URL("http://dev.virtualearth.net/REST/v1/Locations?"+input.getEndereco().toBingSearchString() + "&key=" + API_KEY);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

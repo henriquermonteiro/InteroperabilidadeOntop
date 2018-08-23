@@ -36,6 +36,10 @@ public class GeocodingChainLink extends ResponsibilityChain<Alvara>{
             return input;
         }
         
+        if(input.getEndereco().getLongitude() <= 180 && input.getEndereco().getLongitude() >= -180 && input.getEndereco().getLatitude() <= 90 && input.getEndereco().getLatitude() >= -90){
+            return input;
+        }
+        
         GeocodingApiRequest req = GeocodingApi.newRequest(context).address(input.getEndereco().toSearchString());
         GeocodingResult[] res;
         try{

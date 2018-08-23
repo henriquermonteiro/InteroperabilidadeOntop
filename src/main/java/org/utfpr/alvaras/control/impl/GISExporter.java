@@ -28,13 +28,13 @@ public class GISExporter extends ResponsibilityChain<Alvara> {
     private ArrayList<Alvara> buffer;
     private final SimpleDateFormat sdf;
 
-    public GISExporter(String URL) {
+    public GISExporter(String URL, String user, String password) {
         sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         buffer = new ArrayList<>();
 
         try {
             Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection(URL, "user", "1234");
+            conn = DriverManager.getConnection(URL, user, password);
 
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(GISExporter.class.getName()).log(Level.SEVERE, null, ex);

@@ -22,4 +22,9 @@ public class ReplacerChainLink extends ResponsibilityChain<Alvara>{
     public Alvara change(Alvara input) {
         return input.setAtividadePrincipal(replacer(input.getAtividadePrincipal())).setAtividadeSecundaria(replacer(input.getAtividadeSecundaria())).setAtividadeSecundaria2(replacer(input.getAtividadeSecundaria2()));
     }
+
+    @Override
+    public int getStatus() {
+        return ResponsibilityChain.RUNNING;
+    }
 }

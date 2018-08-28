@@ -62,4 +62,9 @@ public class ClassifyChainLink extends ResponsibilityChain<Alvara> {
         return input;
     }
 
+    @Override
+    public int getStatus() {
+        return (category.isSet() ? RUNNING : MISCONFIGURED);
+    }
+
 }

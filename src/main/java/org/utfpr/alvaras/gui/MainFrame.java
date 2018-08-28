@@ -10,13 +10,21 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import net.lib.easyconfig.EasyConfig;
 import org.utfpr.alvaras.control.Choreographer;
 import org.utfpr.alvaras.control.ResponsibilityChain;
+import org.utfpr.alvaras.control.impl.BingGeocoding;
+import org.utfpr.alvaras.control.impl.ClassifyChainLink;
+import org.utfpr.alvaras.control.impl.GISExporter;
+import org.utfpr.alvaras.control.impl.GeocodingChainLink;
 import org.utfpr.alvaras.leitor.LerCSV;
 import org.utfpr.alvaras.model.Alvara;
 
@@ -50,7 +58,7 @@ public class MainFrame extends javax.swing.JFrame {
             config = EasyConfig.getConfigs("config.conf", model, true);
 
             if (config != null) {
-                jTextField6.setText(config.getProperty("base_file"));
+//                jTextField6.setText(config.getProperty("base_file"));
             } else {
                 error_flag = true;
             }
@@ -59,6 +67,8 @@ public class MainFrame extends javax.swing.JFrame {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             error_flag = true;
         }
+
+        jTextField5.setText("unavailable");
 
     }
 
@@ -121,19 +131,34 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField1.setText("<STATUS GOOGLE API>");
+        jTextField1.setEnabled(false);
 
+        jTextField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField2.setText("<STATUS BING API>");
+        jTextField2.setEnabled(false);
 
+        jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField3.setText("<STATUS POSTGRE>");
+        jTextField3.setEnabled(false);
 
+        jTextField4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField4.setText("<STATUS CATEGORY>");
+        jTextField4.setEnabled(false);
 
+        jTextField5.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField5.setText("<STATUS MAP THING>");
+        jTextField5.setEnabled(false);
 
-        jTextField6.setText("jTextField6");
+        jTextField6.setText("Select input file");
 
         jButton4.setText("Search ...");
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jButton4MouseReleased(evt);
+            }
+        });
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -153,23 +178,17 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(jButton1)
                             .addComponent(jButton2)
                             .addComponent(jButton3))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(471, 471, 471)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                                    .addComponent(jTextField4)
-                                    .addComponent(jTextField3)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(43, 43, 43)
-                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(43, 43, 43)
+                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextField4)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                            .addComponent(jTextField5))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -191,11 +210,11 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(7, 7, 7)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -214,9 +233,23 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jButton1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseReleased
         // TODO add your handling code here:
-        Config c = new Config(this, true, config);
+//        Config c = new Config(this, true, config);
+//
+//        c.setVisible(true);
 
-        c.setVisible(true);
+        try {
+            int ret = JOptionPane.showConfirmDialog(this, "The aplication will be closed.\nEdit the configurations and restart aplication.", "Edit configuration", JOptionPane.YES_NO_OPTION);
+            
+            if(ret == JOptionPane.OK_OPTION){
+                String program = (System.getProperty("os.name").toLowerCase().contains("windows") ? "notepad " : "gedit ");
+                Process p = Runtime.getRuntime().exec(program + new File("config.conf").getAbsolutePath());
+                BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                stdInput.close();
+                
+                System.exit(0);
+            }
+        } catch (Exception k) {
+        }
     }//GEN-LAST:event_jButton1MouseReleased
 
     private void jButton2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseReleased
@@ -230,6 +263,15 @@ public class MainFrame extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton4MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseReleased
+        JFileChooser chooser = new JFileChooser();
+        chooser.setMultiSelectionEnabled(false);
+        
+        if(chooser.showDialog(this, "Select") == JFileChooser.APPROVE_OPTION){
+            jTextField6.setText(chooser.getSelectedFile().getPath());
+        }
+    }//GEN-LAST:event_jButton4MouseReleased
 
     /**
      * @param args the command line arguments
@@ -265,19 +307,72 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }
+    
+    private String convertStatusCode(int statusCode){
+        switch(statusCode){
+            case ResponsibilityChain.RUNNING:
+                return "Running";
+            
+            case ResponsibilityChain.UNAVAILABLE:
+                return "Unavailable";
+            
+            case ResponsibilityChain.UNKOWN:
+                return "Unkown";
+            
+            case ResponsibilityChain.MISCONFIGURED:
+                return "Misconfigures";
+            
+            case ResponsibilityChain.WEBSERVICE_ERROR:
+                return "Error on Web Service Request";
+            
+            default:
+                return "INVALID STATUS";
+        }
+    }
 
     private void executeChoreography(ResponsibilityChain<Alvara> chain) {
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new FileReader(new File(config.getProperty("base_file"))));
-            ArrayList<Alvara> alvaras = LerCSV.ler(reader);
+            ResponsibilityChain axLink = chain;
+            ResponsibilityChain google = null;
+            ResponsibilityChain bing = null;
+            ResponsibilityChain postgre = null;
+            ResponsibilityChain category = null;
             
-            for(Alvara alvara : alvaras){
+            do{
+                if(axLink instanceof GeocodingChainLink){
+                    google = axLink;
+                }else if(axLink instanceof BingGeocoding){
+                    bing = axLink;
+                }else if(axLink instanceof GISExporter) {
+                    postgre = axLink;
+                }else if(axLink instanceof ClassifyChainLink){
+                    category = axLink;
+                }
+                
+                axLink = axLink.getLink();
+            }while(axLink != null);
+            
+            reader = new BufferedReader(new FileReader(new File(jTextField6.getText())));
+            ArrayList<Alvara> alvaras = LerCSV.ler(reader, this);
+            
+            appendText(alvaras.size() + " entries found.");
+            appendText("Starting processing:");
+
+            for (Alvara alvara : alvaras) {
                 chain.change(alvara);
+                
+                jTextField1.setText("Google Status: " + convertStatusCode(google.getStatus()));
+                jTextField2.setText("Bing Status: " + convertStatusCode(bing.getStatus()));
+                jTextField3.setText("Data Bank Status: " + convertStatusCode(postgre.getStatus()));
+                jTextField4.setText("Category Definition Status: " + convertStatusCode(category.getStatus()));
             }
             
+            setTitle("Processing finished");
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            setTitle("ERROR");
         } finally {
             try {
                 reader.close();
@@ -285,6 +380,10 @@ public class MainFrame extends javax.swing.JFrame {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    public void appendText(String text) {
+        jTextArea1.append(text + "\n");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import org.utfpr.alvaras.control.Utils;
 import org.utfpr.alvaras.control.impl.BingGeocoding;
 import org.utfpr.alvaras.control.impl.ClassifyChainLink;
@@ -42,7 +43,7 @@ public class LerCSV {
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
 
             reader.readLine();
-            ArrayList<Alvara> alvaras = ler(reader);
+            ArrayList<Alvara> alvaras = ler(reader, null);
 
             File f_key = new File("googleApiKey.key");
             FileInputStream fKey = new FileInputStream(f_key);
@@ -121,11 +122,13 @@ public class LerCSV {
         }
     }
 
-    public static ArrayList<Alvara> ler(BufferedReader reader) {
+    public static ArrayList<Alvara> ler(BufferedReader reader, JFrame frame) {
         try {
             ArrayList<Alvara> alvaras = new ArrayList<>();
 
             String s;
+            
+            int k = 0;
 
             while ((s = reader.readLine()) != null) {
                 String[] splited = s.split(";");
@@ -148,6 +151,10 @@ public class LerCSV {
                     a.setEndereco(end);
 
                     alvaras.add(a);
+                    
+                    if(frame != null){
+                        frame.setTitle(++k + " entries found ");
+                    }
                 }
             }
 

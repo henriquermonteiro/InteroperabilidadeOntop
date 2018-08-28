@@ -22,5 +22,10 @@ public class ToUpperChainLink extends ResponsibilityChain<Alvara>{
         
         return input;
     }
+
+    @Override
+    public int getStatus() {
+        return ResponsibilityChain.RUNNING;
+    }
     
 }

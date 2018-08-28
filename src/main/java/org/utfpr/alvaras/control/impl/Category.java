@@ -202,4 +202,8 @@ public class Category {
     public String checkCategoryForString(String inputS) {
         return mapping.get(inputS);
     }
+    
+    public boolean isSet(){
+        return (mapping != null ? mapping.size() > 0 : false);
+    }
 }

@@ -22,9 +22,12 @@ import org.utfpr.alvaras.model.Alvara;
  */
 public class BingGeocoding extends ResponsibilityChain<Alvara>{
     private final String API_KEY;
+    private int currentStatus;
     
     public BingGeocoding(String API_KEY) {
         this.API_KEY = API_KEY;
+        
+        currentStatus = UNKOWN;
     }
 
     @Override
@@ -78,10 +81,21 @@ public class BingGeocoding extends ResponsibilityChain<Alvara>{
                         }
                     }
                 }
+                
+                currentStatus = RUNNING;
+            }else{
+                currentStatus = MISCONFIGURED;
             }
-        }catch(IOException ex){}
+        }catch(IOException ex){
+            currentStatus = WEBSERVICE_ERROR;
+        }
         
         return input;
+    }
+
+    @Override
+    public int getStatus() {
+        return currentStatus;
     }
     
 }

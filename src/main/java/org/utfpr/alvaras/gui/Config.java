@@ -5,7 +5,9 @@
  */
 package org.utfpr.alvaras.gui;
 
+import java.io.File;
 import java.util.Properties;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -152,6 +154,11 @@ public class Config extends javax.swing.JDialog {
         jTextField6.setText("jTextField6");
 
         jButton2.setText("Search ...");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jButton2MouseReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -174,6 +181,11 @@ public class Config extends javax.swing.JDialog {
         );
 
         jButton3.setText("Close");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jButton3MouseReleased(evt);
+            }
+        });
 
         jButton4.setText("Save");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -221,6 +233,21 @@ public class Config extends javax.swing.JDialog {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseReleased
+        File f = new File(jTextField6.getText());
+        
+        JFileChooser chooser = new JFileChooser((f.isFile() ? f : new File("")));
+        
+        if(chooser.showDialog(this, "Select") == JFileChooser.APPROVE_OPTION){
+            jTextField6.setText(chooser.getSelectedFile().getPath());
+        }
+        
+    }//GEN-LAST:event_jButton2MouseReleased
+
+    private void jButton3MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseReleased
+        this.dispose();
+    }//GEN-LAST:event_jButton3MouseReleased
 
     /**
      * @param args the command line arguments

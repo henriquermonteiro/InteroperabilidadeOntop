@@ -14,6 +14,11 @@ package org.utfpr.alvaras.control;
  * @author henrique
  */
 public abstract class ResponsibilityChain<T> {
+    public static final int UNKOWN = -1;
+    public static final int UNAVAILABLE = -2;
+    public static final int MISCONFIGURED = -3;
+    public static final int WEBSERVICE_ERROR = -4;
+    public static final int RUNNING = 1;
 
     private ResponsibilityChain<T> chain;
 
@@ -22,11 +27,13 @@ public abstract class ResponsibilityChain<T> {
     }
 
     public abstract T change(T input);
+    
+    public abstract int getStatus();
 
     public final T process(T input) {
         T ret = change(input);
         
-        if (chain != null) {
+        if (chain != null && ret != null) {
             return chain.process(ret);
         }
         
@@ -45,6 +52,10 @@ public abstract class ResponsibilityChain<T> {
 
             next.chain = link;
         }
+    }
+
+    public ResponsibilityChain<T> getLink() {
+        return chain;
     }
 
     public ResponsibilityChain<T> removeLink(ResponsibilityChain<T> link) {

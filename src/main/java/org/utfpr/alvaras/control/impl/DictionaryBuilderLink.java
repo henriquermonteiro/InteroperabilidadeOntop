@@ -77,4 +77,9 @@ public class DictionaryBuilderLink extends ResponsibilityChain<Alvara> {
         }
     }
 
+    @Override
+    public int getStatus() {
+        return RUNNING;
+    }
+
 }

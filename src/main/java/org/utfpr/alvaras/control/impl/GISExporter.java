@@ -27,6 +27,7 @@ public class GISExporter extends ResponsibilityChain<Alvara> {
     private Connection conn;
     private ArrayList<Alvara> buffer;
     private final SimpleDateFormat sdf;
+    private int currentStatus;
 
     public GISExporter(String URL, String user, String password) {
         sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -35,9 +36,13 @@ public class GISExporter extends ResponsibilityChain<Alvara> {
         try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(URL, user, password);
-
+            
+            currentStatus = RUNNING;
+            
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(GISExporter.class.getName()).log(Level.SEVERE, null, ex);
+            
+            currentStatus = MISCONFIGURED;
         }
     }
 
@@ -62,6 +67,8 @@ public class GISExporter extends ResponsibilityChain<Alvara> {
         try {
             Statement st = conn.createStatement();
             ResultSet r = st.executeQuery("SELECT numero_alvara FROM alvara ORDER BY numero_alvara");
+            
+            currentStatus = RUNNING;
 
             while (r.next()) {
                 ret.add(r.getInt("numero_alvara"));
@@ -69,6 +76,8 @@ public class GISExporter extends ResponsibilityChain<Alvara> {
 
         } catch (SQLException ex) {
             Logger.getLogger(GISExporter.class.getName()).log(Level.SEVERE, null, ex);
+            
+            currentStatus = UNAVAILABLE;
         }
 
         return ret;
@@ -114,12 +123,20 @@ public class GISExporter extends ResponsibilityChain<Alvara> {
         try {
             Statement st = conn.createStatement();
             st.executeUpdate(SQL);
-
+            
+            currentStatus = RUNNING;
         } catch (SQLException ex) {
             Logger.getLogger(GISExporter.class.getName()).log(Level.SEVERE, null, ex);
+            
+            currentStatus = UNAVAILABLE;
         }
 
         buffer.clear();
+    }
+
+    @Override
+    public int getStatus() {
+        return currentStatus;
     }
 
 }

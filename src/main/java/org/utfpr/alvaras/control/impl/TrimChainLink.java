@@ -18,5 +18,10 @@ public class TrimChainLink extends ResponsibilityChain<Alvara>{
     public Alvara change(Alvara input) {
         return input.setAtividadePrincipal(input.getAtividadePrincipal().trim()).setAtividadeSecundaria(input.getAtividadeSecundaria().trim()).setAtividadeSecundaria2(input.getAtividadeSecundaria2().trim());
     }
+
+    @Override
+    public int getStatus() {
+        return ResponsibilityChain.RUNNING;
+    }
     
 }

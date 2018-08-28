@@ -28,6 +28,7 @@ public class Choreographer {
     }
 
     public static ResponsibilityChain<Alvara> getExecutionChain(String googleApiKey, String bingApiKey, String postgreURL, String postgreUser, String postgrePW) {
+        FilterChainLink filter = new FilterChainLink();
         ToUpperChainLink toUpp = new ToUpperChainLink();
         ReplacerChainLink replacer = new ReplacerChainLink();
         ClassifyChainLink classify = new ClassifyChainLink();
@@ -35,12 +36,15 @@ public class Choreographer {
         BingGeocoding bgeo = new BingGeocoding(bingApiKey);
         GISExporter gisExp = new GISExporter(postgreURL, postgreUser, postgrePW);
         
+        filter.setExclude(gisExp.getRecordedAlvaras());
+        
         bgeo.addLink(gisExp);
         ggeo.addLink(bgeo);
         classify.addLink(ggeo);
         replacer.addLink(classify);
         toUpp.addLink(replacer);
+        filter.addLink(toUpp);
 
-        return toUpp;
+        return filter;
     }
 }

@@ -20,10 +20,12 @@ import org.utfpr.alvaras.model.Alvara;
 public class GeocodingChainLink extends ResponsibilityChain<Alvara>{
     private Long counter;
     private final GeoApiContext context;
+    private int currentStatus;
     
     public GeocodingChainLink(String API_KEY) {
         this.counter = 0l;
         context = new GeoApiContext().setApiKey(API_KEY);
+        currentStatus = UNKOWN;
     }
 
     public Long getCounter() {
@@ -52,12 +54,20 @@ public class GeocodingChainLink extends ResponsibilityChain<Alvara>{
                 input.getEndereco().setLongitude(latlong.lng);
                 
                 counter++;
+                
+                currentStatus = RUNNING;
             }
         }catch(Exception e){
             e.printStackTrace();
+            currentStatus = WEBSERVICE_ERROR;
         }
         
         return input;
+    }
+
+    @Override
+    public int getStatus() {
+        return currentStatus;
     }
     
 }

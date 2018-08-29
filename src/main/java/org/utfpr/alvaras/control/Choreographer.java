@@ -32,6 +32,7 @@ public class Choreographer {
         FilterChainLink filter = new FilterChainLink();
         ToUpperChainLink toUpp = new ToUpperChainLink();
         ReplacerChainLink replacer = new ReplacerChainLink();
+        TrimChainLink trimmer = new TrimChainLink();
         ClassifyChainLink classify = new ClassifyChainLink();
         GeocodingChainLink ggeo = new GeocodingChainLink(googleApiKey, frame);
         BingGeocoding bgeo = new BingGeocoding(bingApiKey, frame);
@@ -42,7 +43,8 @@ public class Choreographer {
         bgeo.addLink(gisExp);
         ggeo.addLink(bgeo);
         classify.addLink(ggeo);
-        replacer.addLink(classify);
+        trimmer.addLink(classify);
+        replacer.addLink(trimmer);
         toUpp.addLink(replacer);
         filter.addLink(toUpp);
 

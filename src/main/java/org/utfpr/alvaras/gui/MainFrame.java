@@ -9,13 +9,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.io.Writer;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -67,7 +69,30 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             File conf = new File("config.conf");
             if(!conf.exists()){
-                Files.copy(Paths.get("org/utfpr/alvaras/resources/config.conf"), Paths.get("config.conf"), StandardCopyOption.REPLACE_EXISTING);
+//                Files.copy(Paths.get("org/utfpr/alvaras/resources/config.conf"), Paths.get("config.conf"), StandardCopyOption.REPLACE_EXISTING);
+
+                try {
+                    File file = new File("config.conf");
+                    Writer writer = new FileWriter(file);
+                    writer.append("# Configuration file\n\n");
+                    writer.append("# Postgre+PostGIS configurations\n\n\n");
+                    writer.append("host : jdbc/:postgresql/://127.0.0.1/:5432/alvaras\n\n");
+                    writer.append("user : user\n\n");
+                    writer.append("password : 1234\n\n\n");
+                    writer.append("# GoogleAPI Key\n\n");
+                    writer.append("google_api_key : <key>\n\n\n");
+                    writer.append("# Bing MapsAPI Key\n\n");
+                    writer.append("bing_api_key : <key>\n\n\n");
+                    writer.append("# Category Mapping File\n\n");
+                    writer.append("mapping_file : \n\n\n");
+                    writer.append("# Last file\n\n");
+                    writer.append("base_file : Alvaras-Base_de_Dados.CSV");
+                    
+                    writer.flush();
+                    writer.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             
             config = EasyConfig.getConfigs("config.conf", model, true);

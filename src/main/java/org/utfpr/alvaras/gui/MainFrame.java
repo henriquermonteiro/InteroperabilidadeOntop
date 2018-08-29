@@ -7,17 +7,22 @@ package org.utfpr.alvaras.gui;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.text.DefaultCaret;
 import net.lib.easyconfig.EasyConfig;
 import org.utfpr.alvaras.control.Choreographer;
 import org.utfpr.alvaras.control.ResponsibilityChain;
@@ -35,12 +40,17 @@ import org.utfpr.alvaras.model.Alvara;
 public class MainFrame extends javax.swing.JFrame {
 
     private Properties config;
+    private MainFrame thisFrame;
+    private Thread execution = null;
+    private boolean stopExecution = false;
 
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        
+        thisFrame = this;
 
         Properties model = new Properties();
 
@@ -55,6 +65,11 @@ public class MainFrame extends javax.swing.JFrame {
         boolean error_flag = false;
 
         try {
+            File conf = new File("config.conf");
+            if(!conf.exists()){
+                Files.copy(Paths.get("org/utfpr/alvaras/resources/config.conf"), Paths.get("config.conf"), StandardCopyOption.REPLACE_EXISTING);
+            }
+            
             config = EasyConfig.getConfigs("config.conf", model, true);
 
             if (config != null) {
@@ -65,11 +80,17 @@ public class MainFrame extends javax.swing.JFrame {
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            appendText(ex.getMessage());
             error_flag = true;
+        } catch (IOException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            appendText(ex.getMessage());
         }
 
-        jTextField5.setText("unavailable");
-
+        jTextField5.setText("IN DEVELOPMENT");
+        
+        ((DefaultCaret)jTextArea1.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        setProcessing(false);
     }
 
     /**
@@ -93,6 +114,7 @@ public class MainFrame extends javax.swing.JFrame {
         jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -165,6 +187,14 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setText("Stop execution");
+        jButton5.setEnabled(false);
+        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jButton5MouseReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -188,7 +218,10 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                            .addComponent(jTextField5))))
+                            .addComponent(jTextField5)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton5)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -215,7 +248,9 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
+                .addComponent(jButton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -253,11 +288,43 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1MouseReleased
 
     private void jButton2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseReleased
-        executeChoreography(Choreographer.getDictionaryChain());
+        File f = new File(jTextField6.getText());
+        
+        if(!f.isFile()){
+            JOptionPane.showMessageDialog(this, "Select a file");
+            return;
+        }
+        
+        setProcessing(true);
+        execution = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                executeChoreography(Choreographer.getDictionaryChain());
+                setProcessing(false);
+            }
+        });
+        
+        execution.start();
     }//GEN-LAST:event_jButton2MouseReleased
 
     private void jButton3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MousePressed
-        executeChoreography(Choreographer.getExecutionChain(config.getProperty("google_api_key"), config.getProperty("bing_api_key"), config.getProperty("host"), config.getProperty("user"), config.getProperty("password")));
+        File f = new File(jTextField6.getText());
+        
+        if(!f.isFile()){
+            JOptionPane.showMessageDialog(this, "Select a file");
+            return;
+        }
+        
+        setProcessing(true);
+        execution = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                executeChoreography(Choreographer.getExecutionChain(config.getProperty("google_api_key"), config.getProperty("bing_api_key"), config.getProperty("host"), config.getProperty("user"), config.getProperty("password"), thisFrame));
+                setProcessing(false);
+            }
+        });
+        
+        execution.start();
     }//GEN-LAST:event_jButton3MousePressed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -272,6 +339,17 @@ public class MainFrame extends javax.swing.JFrame {
             jTextField6.setText(chooser.getSelectedFile().getPath());
         }
     }//GEN-LAST:event_jButton4MouseReleased
+
+    private void jButton5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseReleased
+        if(!jButton5.isEnabled())
+            return;
+        
+        if(execution != null){
+            stopExecution = true;
+            execution.interrupt();
+            setProcessing(false);
+        }
+    }//GEN-LAST:event_jButton5MouseReleased
 
     /**
      * @param args the command line arguments
@@ -306,6 +384,16 @@ public class MainFrame extends javax.swing.JFrame {
                 new MainFrame().setVisible(true);
             }
         });
+    }
+    
+    private void setProcessing(boolean isProcessing){
+        jButton1.setEnabled(!isProcessing);
+        jButton2.setEnabled(!isProcessing);
+        jButton3.setEnabled(!isProcessing);
+        jButton4.setEnabled(!isProcessing);
+        
+        jButton5.setEnabled(isProcessing && !stopExecution);
+        jButton5.setVisible(isProcessing);
     }
     
     private String convertStatusCode(int statusCode){
@@ -353,19 +441,34 @@ public class MainFrame extends javax.swing.JFrame {
                 axLink = axLink.getLink();
             }while(axLink != null);
             
-            reader = new BufferedReader(new FileReader(new File(jTextField6.getText())));
+            jTextArea1.setText("");
+            appendText("Processing can only be halted after file loading");
+            
+            stopExecution = true;
+            setProcessing(true);
+            
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(jTextField6.getText()), "UTF-8"));
             ArrayList<Alvara> alvaras = LerCSV.ler(reader, this);
+            
+            stopExecution = false;
+            setProcessing(true);
             
             appendText(alvaras.size() + " entries found.");
             appendText("Starting processing:");
 
             for (Alvara alvara : alvaras) {
-                chain.change(alvara);
+                chain.process(alvara);
                 
                 jTextField1.setText("Google Status: " + convertStatusCode(google.getStatus()));
                 jTextField2.setText("Bing Status: " + convertStatusCode(bing.getStatus()));
                 jTextField3.setText("Data Bank Status: " + convertStatusCode(postgre.getStatus()));
                 jTextField4.setText("Category Definition Status: " + convertStatusCode(category.getStatus()));
+                
+                if(stopExecution){
+                    setTitle("Execution stoped");
+                    stopExecution = false;
+                    return;
+                }
             }
             
             setTitle("Processing finished");
@@ -373,6 +476,8 @@ public class MainFrame extends javax.swing.JFrame {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             setTitle("ERROR");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 reader.close();
@@ -381,8 +486,8 @@ public class MainFrame extends javax.swing.JFrame {
             }
         }
     }
-
-    public void appendText(String text) {
+    
+    public synchronized void appendText(String text) {
         jTextArea1.append(text + "\n");
     }
 
@@ -391,6 +496,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;

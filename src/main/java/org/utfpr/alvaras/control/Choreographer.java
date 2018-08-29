@@ -6,6 +6,7 @@
 package org.utfpr.alvaras.control;
 
 import org.utfpr.alvaras.control.impl.*;
+import org.utfpr.alvaras.gui.MainFrame;
 import org.utfpr.alvaras.model.Alvara;
 
 /**
@@ -27,13 +28,13 @@ public class Choreographer {
         return toUpp;
     }
 
-    public static ResponsibilityChain<Alvara> getExecutionChain(String googleApiKey, String bingApiKey, String postgreURL, String postgreUser, String postgrePW) {
+    public static ResponsibilityChain<Alvara> getExecutionChain(String googleApiKey, String bingApiKey, String postgreURL, String postgreUser, String postgrePW, MainFrame frame) {
         FilterChainLink filter = new FilterChainLink();
         ToUpperChainLink toUpp = new ToUpperChainLink();
         ReplacerChainLink replacer = new ReplacerChainLink();
         ClassifyChainLink classify = new ClassifyChainLink();
-        GeocodingChainLink ggeo = new GeocodingChainLink(googleApiKey);
-        BingGeocoding bgeo = new BingGeocoding(bingApiKey);
+        GeocodingChainLink ggeo = new GeocodingChainLink(googleApiKey, frame);
+        BingGeocoding bgeo = new BingGeocoding(bingApiKey, frame);
         GISExporter gisExp = new GISExporter(postgreURL, postgreUser, postgrePW);
         
         filter.setExclude(gisExp.getRecordedAlvaras());

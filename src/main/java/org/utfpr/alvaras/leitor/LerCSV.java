@@ -71,8 +71,8 @@ public class LerCSV {
 
             ClassifyChainLink classify = new ClassifyChainLink();
             GISExporter gisExp = new GISExporter(URL, "user", "1234");
-//            GeocodingChainLink geo = new GeocodingChainLink(API_KEY);
-            BingGeocoding geo = new BingGeocoding(API_KEY_BING);
+//            GeocodingChainLink geo = new GeocodingChainLink(API_KEY, null);
+            BingGeocoding geo = new BingGeocoding(API_KEY_BING, null);
 //            DictionaryBuilderLink dic = new DictionaryBuilderLink();
             TrimChainLink trimer = new TrimChainLink();
             ReplacerChainLink replacer = new ReplacerChainLink();

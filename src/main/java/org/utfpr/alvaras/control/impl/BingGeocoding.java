@@ -9,11 +9,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.utfpr.alvaras.control.ResponsibilityChain;
+import org.utfpr.alvaras.gui.MainFrame;
 import org.utfpr.alvaras.model.Alvara;
 
 /**
@@ -23,20 +23,18 @@ import org.utfpr.alvaras.model.Alvara;
 public class BingGeocoding extends ResponsibilityChain<Alvara>{
     private final String API_KEY;
     private int currentStatus;
+    private MainFrame frame;
     
-    public BingGeocoding(String API_KEY) {
+    public BingGeocoding(String API_KEY, MainFrame frame) {
         this.API_KEY = API_KEY;
+        this.frame = frame;
         
         currentStatus = UNKOWN;
     }
 
     @Override
     public Alvara change(Alvara input) {
-        if(input.getClassificacoes().isEmpty()){
-            return input;
-        }
-        
-        if(input.getEndereco().getLongitude() <= 180 && input.getEndereco().getLongitude() >= -180 && input.getEndereco().getLatitude() <= 90 && input.getEndereco().getLatitude() >= -90){
+        if(input.getClassificacoes().isEmpty() || currentStatus == UNAVAILABLE){
             return input;
         }
         
@@ -77,16 +75,23 @@ public class BingGeocoding extends ResponsibilityChain<Alvara>{
                             input.getEndereco().setLatitude(coord.getDouble(0));
                             input.getEndereco().setLongitude(coord.getDouble(1));
                             
+                            if(frame != null)
+                                frame.appendText("Bing|Geocoding successfull ID: " + input.getNumeroDoAlvara());
+                
                             break;
                         }
                     }
                 }
                 
                 currentStatus = RUNNING;
+            }else if(responseCode == 429){
+                currentStatus = UNAVAILABLE;
             }else{
                 currentStatus = MISCONFIGURED;
             }
         }catch(IOException ex){
+            if(frame != null)
+                frame.appendText("Bing|Geocoding successfull ID: " + input.getNumeroDoAlvara());
             currentStatus = WEBSERVICE_ERROR;
         }
         

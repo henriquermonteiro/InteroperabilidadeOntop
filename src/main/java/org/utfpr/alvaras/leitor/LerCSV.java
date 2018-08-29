@@ -153,7 +153,7 @@ public class LerCSV {
                     alvaras.add(a);
                     
                     if(frame != null){
-                        frame.setTitle(++k + " entries found ");
+                        frame.setTitle(++k + " registros encontrados  ");
                     }
                 }
             }

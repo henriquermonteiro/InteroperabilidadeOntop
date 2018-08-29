@@ -198,9 +198,9 @@ public class MainFrame extends javax.swing.JFrame {
         jTextField5.setText("<STATUS MAP THING>");
         jTextField5.setEnabled(false);
 
-        jTextField6.setText("Select input file");
+        jTextField6.setText("Selecione arquivo de entrada");
 
-        jButton4.setText("Search ...");
+        jButton4.setText("Buscar ...");
         jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jButton4MouseReleased(evt);
@@ -212,7 +212,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setText("Stop execution");
+        jButton5.setText("Parar execução");
         jButton5.setEnabled(false);
         jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -237,7 +237,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jTextField4)
                             .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -298,7 +298,7 @@ public class MainFrame extends javax.swing.JFrame {
 //        c.setVisible(true);
 
         try {
-            int ret = JOptionPane.showConfirmDialog(this, "The aplication will be closed.\nEdit the configurations and restart aplication.", "Edit configuration", JOptionPane.YES_NO_OPTION);
+            int ret = JOptionPane.showConfirmDialog(this, "A aplicação será fechada.\nEdite as configurações e reinicie a aplicação.", "Editar configurações", JOptionPane.YES_NO_OPTION);
             
             if(ret == JOptionPane.OK_OPTION){
                 String program = (System.getProperty("os.name").toLowerCase().contains("windows") ? "notepad " : "gedit ");
@@ -316,7 +316,7 @@ public class MainFrame extends javax.swing.JFrame {
         File f = new File(jTextField6.getText());
         
         if(!f.isFile()){
-            JOptionPane.showMessageDialog(this, "Select a file");
+            JOptionPane.showMessageDialog(this, "Selecione um arquivo");
             return;
         }
         
@@ -336,7 +336,7 @@ public class MainFrame extends javax.swing.JFrame {
         File f = new File(jTextField6.getText());
         
         if(!f.isFile()){
-            JOptionPane.showMessageDialog(this, "Select a file");
+            JOptionPane.showMessageDialog(this, "Selecione um arquivo");
             return;
         }
         
@@ -467,7 +467,7 @@ public class MainFrame extends javax.swing.JFrame {
             }while(axLink != null);
             
             jTextArea1.setText("");
-            appendText("Processing can only be halted after file loading");
+            appendText("Processamento só pode ser interrompido após a leitura do arquivo.");
             
             stopExecution = true;
             setProcessing(true);
@@ -478,8 +478,8 @@ public class MainFrame extends javax.swing.JFrame {
             stopExecution = false;
             setProcessing(true);
             
-            appendText(alvaras.size() + " entries found.");
-            appendText("Starting processing:");
+            appendText(alvaras.size() + " registros encontrados.");
+            appendText("Começando processamento:");
 
             for (Alvara alvara : alvaras) {
                 chain.process(alvara);
@@ -490,13 +490,13 @@ public class MainFrame extends javax.swing.JFrame {
                 jTextField4.setText("Category Definition Status: " + convertStatusCode(category.getStatus()));
                 
                 if(stopExecution){
-                    setTitle("Execution stoped");
+                    setTitle("Execução parada");
                     stopExecution = false;
                     return;
                 }
             }
             
-            setTitle("Processing finished");
+            setTitle("Processamento finalizado");
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
